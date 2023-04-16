@@ -1,4 +1,8 @@
-# Create T3 App
+# Create T3 App Postgres
+
+This project is a fork of [my-t3-drizzle](https://github.com/retconned/my-t3-drizzle), which uses MySQL. I've converted it here to use Postgres.
+
+---
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app` using [Drizzle-orm](https://github.com/drizzle-team/drizzle-orm).
 
@@ -7,20 +11,20 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 1. Copy and fill secrets
 
 ```bash
-pnpm i
+npm i
 cp .env.example .env
 ```
 
-2. Push your schema changes
+2. Generate the postgres queries (and run them in your postgres server)
 
 ```bash
-pnpm db:push
+npm run db:generate
 ```
 
 3. Start developing
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 ## What's next? How do I make an app with this?

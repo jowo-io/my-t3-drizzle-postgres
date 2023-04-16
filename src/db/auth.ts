@@ -1,15 +1,14 @@
 import {
-  datetime,
   index,
-  int,
-  mysqlTable,
+  integer,
+  pgTable,
   text,
   timestamp,
   uniqueIndex,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
-export const accounts = mysqlTable(
+export const accounts = pgTable(
   "accounts",
   {
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
@@ -17,15 +16,15 @@ export const accounts = mysqlTable(
     type: varchar("type", { length: 191 }).notNull(),
     provider: varchar("provider", { length: 191 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 191 }).notNull(),
-    access_token: text("access_token"),
-    expires_in: int("expires_in"),
-    id_token: text("id_token"),
     refresh_token: text("refresh_token"),
-    refresh_token_expires_in: int("refresh_token_expires_in"),
-    scope: varchar("scope", { length: 191 }),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
     token_type: varchar("token_type", { length: 191 }),
-    createdAt: timestamp("createdAt").defaultNow().onUpdateNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    scope: varchar("scope", { length: 191 }),
+    id_token: text("id_token"),
+    session_state: varchar("sessionToken", { length: 191 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
   (account) => ({
     providerProviderAccountIdIndex: uniqueIndex(
@@ -35,15 +34,15 @@ export const accounts = mysqlTable(
   })
 );
 
-export const sessions = mysqlTable(
+export const sessions = pgTable(
   "sessions",
   {
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
     sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
-    expires: datetime("expires").notNull(),
-    created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
   (session) => ({
     sessionTokenIndex: uniqueIndex("sessions__sessionToken__idx").on(
@@ -53,30 +52,14 @@ export const sessions = mysqlTable(
   })
 );
 
-export const users = mysqlTable(
-  "users",
-  {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
-    name: varchar("name", { length: 191 }),
-    email: varchar("email", { length: 191 }).notNull(),
-    emailVerified: timestamp("emailVerified"),
-    image: varchar("image", { length: 191 }),
-    created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-  },
-  (user) => ({
-    emailIndex: uniqueIndex("users__email__idx").on(user.email),
-  })
-);
-
-export const verificationTokens = mysqlTable(
+export const verificationTokens = pgTable(
   "verification_tokens",
   {
     identifier: varchar("identifier", { length: 191 }).primaryKey().notNull(),
     token: varchar("token", { length: 191 }).notNull(),
-    expires: datetime("expires").notNull(),
-    created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
   (verificationToken) => ({
     tokenIndex: uniqueIndex("verification_tokens__token__idx").on(
@@ -85,18 +68,18 @@ export const verificationTokens = mysqlTable(
   })
 );
 
-export const posts = mysqlTable(
-  "posts",
+export const users = pgTable(
+  "users",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
-    user_id: varchar("user_id", { length: 191 }).notNull(),
-    slug: varchar("slug", { length: 191 }).notNull(),
-    title: text("title").notNull(),
-    text: text("text").notNull(),
-    created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+    id: text("id").notNull().primaryKey(),
+    name: text("name"),
+    email: text("email").notNull(),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    image: text("image"),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
-  (post) => ({
-    userIdIndex: uniqueIndex("posts__user_id__idx").on(post.user_id),
+  (user) => ({
+    emailIndex: uniqueIndex("users__email__idx").on(user.email),
   })
 );
