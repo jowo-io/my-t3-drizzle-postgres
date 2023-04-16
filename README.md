@@ -6,6 +6,18 @@ This project is a fork of [my-t3-drizzle](https://github.com/retconned/my-t3-dri
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app` using [Drizzle-orm](https://github.com/drizzle-team/drizzle-orm).
 
+# Postgres
+
+To run this app entirely on localhost, you'll need to install Postgres
+
+### PostgresQL
+
+https://www.postgresql.org/download/
+
+### Postbird (optional)
+
+https://github.com/Paxa/postbird
+
 ## Get started
 
 1. Copy and fill secrets
@@ -15,7 +27,7 @@ npm i
 cp .env.example .env
 ```
 
-2. Generate the postgres queries (and run them in your postgres server)
+2. Generate the postgres queries (and run them in your local postgres server)
 
 ```bash
 npm run db:generate
